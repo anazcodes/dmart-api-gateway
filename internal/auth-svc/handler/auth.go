@@ -7,9 +7,19 @@ import (
 
 	"github.com/anazibinurasheed/d-api-gateway/internal/auth-svc/payload"
 	"github.com/anazibinurasheed/d-api-gateway/internal/auth-svc/pb"
-	util "github.com/anazibinurasheed/d-api-gateway/internal/utils"
+	util "github.com/anazibinurasheed/d-api-gateway/internal/util"
 	"github.com/gin-gonic/gin"
 )
+
+/*
+ctrl shift+.
+ctrl f
+
+ctrl p also find things from the deps > @ #y
+ctrl 0
+ctrl f name replace all
+ctrl g for go to line number  select wanna edit then ctrl + d
+*/
 
 func CreateAccount(c *gin.Context, asc pb.AuthServiceClient) {
 	var body payload.CreateAccountRequest
@@ -26,8 +36,29 @@ func CreateAccount(c *gin.Context, asc pb.AuthServiceClient) {
 		Password2: body.Password,
 	})
 
+	if util.HasError(err) {
+		util.Logger(err.Error())
+		c.JSON(http.StatusBadGateway, err.Error())
+		return
+	}
+
+	c.JSON(int(res.Status), res)
+}
+
+func UserLogin(c *gin.Context, asc pb.AuthServiceClient) {
+	var body payload.UserLoginRequest
+
+	util.BindRequest(c, &body)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	res, err := asc.UserLogin(ctx, &pb.UserLoginRequest{
+		LoginInput: body.LoginInput,
+		Password:   body.Password,
+	})
+
 	if err != nil {
-		util.LogInput(err.Error())
+		util.Logger(err.Error())
 		c.JSON(http.StatusBadGateway, err)
 		return
 	}
@@ -35,6 +66,23 @@ func CreateAccount(c *gin.Context, asc pb.AuthServiceClient) {
 	c.JSON(int(res.Status), res)
 }
 
-// showing:
+func AdminLogin(c *gin.Context, asc pb.AuthServiceClient) {
+	var body payload.AdminLoginRequest
 
-// rpc error: code = Canceled desc = grpc: the client connection is closing
+	util.BindRequest(c, &body)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	res, err := asc.AdminLogin(ctx, &pb.AdminLoginRequest{
+		Username: body.Username,
+		Password: body.Password,
+	})
+
+	if err != nil {
+		util.Logger(err.Error())
+		c.JSON(http.StatusBadGateway, err)
+		return
+	}
+
+	c.JSON(int(res.Status), res)
+}

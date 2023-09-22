@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/anazibinurasheed/d-api-gateway/internal/auth-svc/pb"
-	util "github.com/anazibinurasheed/d-api-gateway/internal/utils"
+	util "github.com/anazibinurasheed/d-api-gateway/internal/util"
 	"google.golang.org/grpc"
 )
 

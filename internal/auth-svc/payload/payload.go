@@ -2,8 +2,8 @@
 package payload
 
 type AdminLoginRequest struct {
-	Username string
-	Password string
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 type AdminLoginResponse struct {
@@ -27,8 +27,8 @@ type CreateAccountResponse struct {
 }
 
 type UserLoginRequest struct {
-	LoginInput string // user can login using email, phone or using username
-	Password   string
+	LoginInput string `json:"login_input"` // user can login using email, phone or using username
+	Password   string `json:"password"`
 }
 
 type UserLoginResponse struct {

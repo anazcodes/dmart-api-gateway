@@ -5,12 +5,13 @@ import (
 
 	authsvc "github.com/anazibinurasheed/d-api-gateway/internal/auth-svc"
 	configs "github.com/anazibinurasheed/d-api-gateway/internal/config"
-	util "github.com/anazibinurasheed/d-api-gateway/internal/utils"
+	inventorysvc "github.com/anazibinurasheed/d-api-gateway/internal/inventorysvc"
+	util "github.com/anazibinurasheed/d-api-gateway/internal/util"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	config, err := configs.LoadConfigs()
+	config, err := configs.LoadConfig()
 	if util.HasError(err) {
 		log.Fatalln("failed to load config:", err)
 	}
@@ -18,6 +19,7 @@ func main() {
 	r := gin.New()
 
 	_ = authsvc.RegisterRoutes(r, config.AuthSvcPort)
+	inventorysvc.RegisterRoutes(r, config.InventorySvcPort)
 
 	log.Fatalln(r.Run(config.ApiGatewayPort))
 }

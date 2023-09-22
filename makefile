@@ -1,4 +1,4 @@
 run:
-	go run .cmd/
+	go run cmd/*.go
 proto:
-	protoc internal/auth-svc/pb/*.proto --go_out=. --go-grpc_out=.
+	protoc internal/**/pb/*.proto --go_out=. --go-grpc_out=.
