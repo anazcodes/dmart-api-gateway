@@ -1,10 +1,10 @@
-package client
+package inventorysvc
 
 import (
 	"log"
 
-	"github.com/anazibinurasheed/d-api-gateway/internal/inventorysvc/pb"
-	"github.com/anazibinurasheed/d-api-gateway/internal/util"
+	"github.com/anazibinurasheed/dmart-api-gateway/pkg/inventorysvc/pb"
+	"github.com/anazibinurasheed/dmart-api-gateway/pkg/util"
 	"google.golang.org/grpc"
 )
 

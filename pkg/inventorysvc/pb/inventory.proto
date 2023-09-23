@@ -3,7 +3,7 @@ syntax= "proto3";
 package inventorysvc;
 
 
-option go_package = "./internal/inventorysvc/pb";
+option go_package = "./pkg/inventorysvc/pb";
 
 
 service InventoryService {

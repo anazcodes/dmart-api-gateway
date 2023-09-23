@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/anazibinurasheed/d-api-gateway/internal/inventorysvc/payload"
-	"github.com/anazibinurasheed/d-api-gateway/internal/inventorysvc/pb"
-	"github.com/anazibinurasheed/d-api-gateway/internal/util"
+	"github.com/anazibinurasheed/dmart-api-gateway/pkg/inventorysvc/payload"
+	"github.com/anazibinurasheed/dmart-api-gateway/pkg/inventorysvc/pb"
+	"github.com/anazibinurasheed/dmart-api-gateway/pkg/util"
 	"github.com/gin-gonic/gin"
 )
 

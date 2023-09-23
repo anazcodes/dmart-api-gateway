@@ -7,20 +7,28 @@ import (
 	"time"
 
 	"github.com/anazibinurasheed/dmart-api-gateway/pkg/auth-svc/pb"
-	"github.com/anazibinurasheed/dmart-api-gateway/pkg/authsvc/client"
 	util "github.com/anazibinurasheed/dmart-api-gateway/pkg/util"
 	"github.com/gin-gonic/gin"
 )
 
-type AuthMiddleWare struct {
-	svc *client.ServiceClient
+type AuthMiddleware struct {
+	svc *ServiceClient
 }
 
-func InitAuthMiddleware(svc *client.ServiceClient) AuthMiddleWare {
-	return InitAuthMiddleware(svc)
+func InitAuthMiddleware(svc *ServiceClient) AuthMiddleware {
+	return AuthMiddleware{svc: svc}
 }
 
-func (a *AuthMiddleWare) AuthRequired(c *gin.Context) {
+func (a *AuthMiddleware) AdminAuth(c *gin.Context) {
+	a.AuthRequired(c)
+}
+
+func (a *AuthMiddleware) UserAuth(c *gin.Context) {
+	a.AuthRequired(c)
+
+}
+
+func (a *AuthMiddleware) AuthRequired(c *gin.Context) {
 	authorization := c.Request.Header.Get("authorization")
 	if authorization == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"msg": "unauthorized user"})
