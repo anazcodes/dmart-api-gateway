@@ -16,3 +16,11 @@ func (inv *Client) CreateCategory(c *gin.Context) {
 func (inv *Client) ReadCategories(c *gin.Context) {
 	ReadCategories(c, inv.Client)
 }
+
+func (inv *Client) AddProduct(c *gin.Context) {
+	AddProduct(c, inv.Client)
+}
+
+func (inv *Client) ReadProducts(c *gin.Context) {
+	ReadProducts(c, inv.Client)
+}

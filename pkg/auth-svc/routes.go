@@ -1,8 +1,8 @@
 package authsvc
 
 import (
-	"github.com/anazibinurasheed/d-api-gateway/internal/auth-svc/client"
-	"github.com/anazibinurasheed/d-api-gateway/internal/auth-svc/handler"
+	"github.com/anazibinurasheed/dmart-api-gateway/pkg/auth-svc/client"
+	"github.com/anazibinurasheed/dmart-api-gateway/pkg/auth-svc/handler"
 	"github.com/gin-gonic/gin"
 )
 

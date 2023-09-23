@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 
-	authsvc "github.com/anazibinurasheed/d-api-gateway/internal/auth-svc"
-	configs "github.com/anazibinurasheed/d-api-gateway/internal/config"
-	inventorysvc "github.com/anazibinurasheed/d-api-gateway/internal/inventorysvc"
-	util "github.com/anazibinurasheed/d-api-gateway/internal/util"
+	util "github.com/anazibinurasheed/dmart-api-gateway/internal/util"
+	authsvc "github.com/anazibinurasheed/dmart-api-gateway/pkg/auth-svc"
+	configs "github.com/anazibinurasheed/dmart-api-gateway/pkg/config"
+	inventorysvc "github.com/anazibinurasheed/dmart-api-gateway/pkg/inventorysvc"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +18,7 @@ func main() {
 
 	r := gin.New()
 
-	_ = authsvc.RegisterRoutes(r, config.AuthSvcPort)
+	authsvc := authsvc.RegisterRoutes(r, config.AuthSvcPort)
 	inventorysvc.RegisterRoutes(r, config.InventorySvcPort)
 
 	log.Fatalln(r.Run(config.ApiGatewayPort))

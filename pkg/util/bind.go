@@ -7,14 +7,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func BindRequest(c *gin.Context, obj any) {
+func BindRequest(c *gin.Context, obj any) bool {
 
-	if err := c.ShouldBindJSON(obj); err != nil {
-		defer panic("json binding failed")
+	err := c.ShouldBindJSON(obj)
+	if err != nil {
 		response := Response(http.StatusBadRequest, "failed", nil, nil)
-		c.JSON(http.StatusBadRequest, response)
-		return
+		c.JSON(http.StatusBadRequest, &response)
+		return false
 	}
+	return err == nil
 }
 
 func GetPageNCount(c *gin.Context) (page int, count int, err error) {

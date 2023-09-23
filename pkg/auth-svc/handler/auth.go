@@ -11,16 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-/*
-ctrl shift+.
-ctrl f
-
-ctrl p also find things from the deps > @ #y
-ctrl 0
-ctrl f name replace all
-ctrl g for go to line number  select wanna edit then ctrl + d
-*/
-
 func CreateAccount(c *gin.Context, asc pb.AuthServiceClient) {
 	var body payload.CreateAccountRequest
 

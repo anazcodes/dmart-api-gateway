@@ -56,7 +56,7 @@ message DeleteCategoryResponse {
 
 
 message AddProductRequest{         
-    int64 categoryID =1; 
+    string categoryID =1; 
     string name  =2;
     string	description =3;
     repeated string Image =4;     

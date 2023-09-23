@@ -6,10 +6,12 @@ package authsvc;
 option go_package = "./internal/auth-svc/pb";
 
 
+
 service AuthService {
  rpc AdminLogin(AdminLoginRequest) returns (AdminLoginResponse){} 
  rpc CreateAccount(CreateAccountRequest) returns (CreateAccountResponse){}
  rpc UserLogin(UserLoginRequest) returns (UserLoginResponse) {}
+ rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse){}
 }
 
 
@@ -21,6 +23,8 @@ message AdminLoginRequest {
 message AdminLoginResponse {
     int64 status=1;
     string msg = 2;
+    string token=3;
+    string error=4;
 }
 
 
@@ -35,6 +39,7 @@ message CreateAccountRequest {
 message CreateAccountResponse {
     int64 status = 1; 
     string msg = 2;
+    string error=3;
 }
 
 // user can login using email, phone or using username
@@ -45,6 +50,18 @@ message UserLoginRequest {
 
 
 message UserLoginResponse {
-int64 status = 1;
-string msg = 2;
+    int64 status = 1;
+    string msg = 2;
+    string token=3;
+    string error=4;
+}
+
+
+message ValidateTokenRequest{
+   string token = 1;
+}
+
+message ValidateTokenResponse{
+    int64 status =1;
+    string userID =2;
 }
