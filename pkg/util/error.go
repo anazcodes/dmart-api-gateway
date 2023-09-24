@@ -12,6 +12,7 @@ func HasError(err error) bool {
 	return err != nil
 }
 
+// Logger can print any type of data
 func Logger(any ...any) {
 	fmt.Println("\n" + fmt.Sprint(any...) + "\n")
 }

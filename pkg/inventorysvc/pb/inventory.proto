@@ -75,10 +75,11 @@ message Product{
     string id =1;
     string  categoryID =2; 
     string name  =3;
-    string	description =4;
-    repeated string image =5;     
-    int64 price = 6;
-    bool isBlocked =7;
+    string brand  =5;
+    string	description =6;
+    repeated string image =7;     
+    int64 price = 8;
+    bool isBlocked =9;
 }
 
 

@@ -2,6 +2,7 @@ package authsvc
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -20,34 +21,46 @@ func InitAuthMiddleware(svc *ServiceClient) AuthMiddleware {
 }
 
 func (a *AuthMiddleware) AdminAuth(c *gin.Context) {
-	a.AuthRequired(c)
+	var role = "suAdmin"
+	a.authRequired(c, role)
 }
 
 func (a *AuthMiddleware) UserAuth(c *gin.Context) {
-	a.AuthRequired(c)
+	var role = "user"
+	a.authRequired(c, role)
 
 }
 
-func (a *AuthMiddleware) AuthRequired(c *gin.Context) {
+func (a *AuthMiddleware) authRequired(c *gin.Context, role string) {
 	authorization := c.Request.Header.Get("authorization")
 	if authorization == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"msg": "unauthorized user"})
+		fmt.Println("1")
+
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"StatusCode": 401,
+			"msg":        "Unauthorized User",
+		})
+
 		return
 	}
 
 	token := strings.Split(authorization, "Bearer")
-	if len(token) > 2 {
-		c.JSON(http.StatusUnauthorized, gin.H{"msg": "unauthorized user"})
+	if len(token) < 2 {
 
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"StatusCode": 401,
+			"msg":        "Unauthorized User",
+		})
 		return
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	response, err := a.svc.Client.ValidateToken(
+	resp, err := a.svc.Client.ValidateToken(
 		ctx, &pb.ValidateTokenRequest{
-			Token: token[len(token)-1],
+			Token: token[1],
+			Role:  role,
 		})
 
 	if util.HasError(err) {
@@ -55,11 +68,15 @@ func (a *AuthMiddleware) AuthRequired(c *gin.Context) {
 		return
 	}
 
-	if response.Status != http.StatusOK {
-		c.JSON(http.StatusUnauthorized, response)
+	if resp.Status != http.StatusOK {
+
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"StatusCode": 401,
+			"data":       resp,
+		})
 		return
 	}
 
-	c.Set("userID", response.UserID)
+	c.Set("userID", resp.UserID)
 	c.Next()
 }

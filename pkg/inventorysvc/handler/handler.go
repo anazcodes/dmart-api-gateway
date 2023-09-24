@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -12,12 +11,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Create category
+// @Description Admin can create category
+// @Tags inventory-admin
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param			body		body	payload.CreateCategoryRequest	true	"Category object"
+// @Success		200			{object}	pb.AddProductResponse
+// @Failure 	400    {object} util.response
+// @Failure 	417    {object} util.response
+// @Failure 	502    {object} util.response
+// @Router			/admin/create-category [post]
 func CreateCategory(c *gin.Context, inv pb.InventoryServiceClient) {
 	var body payload.CreateCategoryRequest
-	util.BindRequest(c, &body)
-
-	if err := payload.ValidateStruct(&body); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+	if !util.BindRequest(c, &body) {
+		return
+	}
+	if !util.ValidateStruct(c, &body) {
 		return
 	}
 
@@ -28,19 +39,27 @@ func CreateCategory(c *gin.Context, inv pb.InventoryServiceClient) {
 		Name: body.Name,
 	})
 
-	if util.HasError(err) {
-		c.JSON(http.StatusBadGateway, err.Error())
+	if util.RpcHasError(c, err) {
 		return
 	}
+
 	c.JSON(int(res.Status), res)
 }
 
+// @Summary View all categories
+// @Description User can view all available categories
+// @Tags inventory
+// @Produce json
+// @Param			page	query	int	true	"Page number"
+// @Param			count	query	int	true	"Number of items per page"
+// @Success		200			{object}	pb.ReadCategoriesResponse
+// @Failure 	400    {object} util.response
+// @Failure 	417    {object} util.response
+// @Failure 	502    {object} util.response
+// @Router			/read-categories [get]
 func ReadCategories(c *gin.Context, i pb.InventoryServiceClient) {
-
 	page, count, err := util.GetPageNCount(c)
-	if util.HasError(err) {
-		response := util.Response(http.StatusBadRequest, "Invalid parameters provided for pagination", nil, err.Error())
-		c.JSON(http.StatusBadRequest, response)
+	if util.ErrorInPageInfo(c, err) {
 		return
 	}
 
@@ -52,59 +71,69 @@ func ReadCategories(c *gin.Context, i pb.InventoryServiceClient) {
 		Count: int64(count),
 	})
 
-	if util.HasError(err) {
-		c.JSON(http.StatusBadGateway, err.Error())
+	if util.RpcHasError(c, err) {
 		return
 	}
 
 	c.JSON(http.StatusOK, data)
 }
 
+// @Summary Add product
+// @Description Admin can add product
+// @Tags inventory-admin
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Param			body		body	payload.CreateProductRequest	true	"Product object"
+// @Success		200			{object}	pb.AddProductResponse
+// @Failure 	400    {object} util.response
+// @Failure 	417    {object} util.response
+// @Failure 	502    {object} util.response
+// @Router			/admin/add-product [post]
 func AddProduct(c *gin.Context, i pb.InventoryServiceClient) {
 	var body payload.CreateProductRequest
-	fmt.Println("1")
 
 	if !util.BindRequest(c, &body) {
 		return
 	}
-
-	if err := payload.ValidateStruct(&body); err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+	if !util.ValidateStruct(c, &body) {
 		return
 	}
-
-	fmt.Println("2")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	response, err := i.AddProduct(ctx, &pb.AddProductRequest{
+
+	res, err := i.AddProduct(ctx, &pb.AddProductRequest{
 		CategoryID:  body.CategoryID,
 		Name:        body.Name,
 		Description: body.Description,
-		Image:       body.Image,
 		Price:       body.Price,
 	})
-	fmt.Println("3")
 
-	if util.HasError(err) {
-		c.JSON(http.StatusBadGateway, err.Error())
+	if util.RpcHasError(c, err) {
 		return
 	}
-	fmt.Println("4")
 
-	c.JSON(http.StatusCreated, response)
-	fmt.Println("5")
-
+	c.JSON(http.StatusCreated, res)
 }
 
+// @Summary View all products
+// @Description User can view all available products
+// @Tags inventory
+// @Produce json
+// @Param			page	query	int	true	"Page number"
+// @Param			count	query	int	true	"Number of items per page"
+// @Success		200			{object}	pb.ReadProductsResponse
+// @Failure 	400    {object} util.response
+// @Failure 	417    {object} util.response
+// @Failure 	502    {object} util.response
+// @Router			/read-products [get]
 func ReadProducts(c *gin.Context, i pb.InventoryServiceClient) {
-
 	page, count, err := util.GetPageNCount(c)
-	if util.HasError(err) {
-		response := util.Response(http.StatusBadRequest, "Invalid parameters provided for pagination", nil, err.Error())
-		c.JSON(http.StatusBadRequest, response)
+	if util.ErrorInPageInfo(c, err) {
 		return
 	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -113,8 +142,7 @@ func ReadProducts(c *gin.Context, i pb.InventoryServiceClient) {
 		Count: int64(count),
 	})
 
-	if util.HasError(err) {
-		c.JSON(http.StatusBadGateway, err.Error())
+	if util.RpcHasError(c, err) {
 		return
 	}
 

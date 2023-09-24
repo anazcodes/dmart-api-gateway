@@ -4,8 +4,8 @@ package payload
 import "github.com/go-playground/validator/v10"
 
 type AdminLoginRequest struct {
-	Username string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
+	Username string `json:"username" validate:"required" binding:"required"`
+	Password string `json:"password" validate:"required" binding:"required"`
 }
 
 type AdminLoginResponse struct {
@@ -15,11 +15,11 @@ type AdminLoginResponse struct {
 }
 
 type CreateAccountRequest struct {
-	Username        string `json:"username" validate:"required,min=3"`
-	Email           string `json:"email" validate:"required,email"`
-	Phone           int64  `json:"phone" validate:"required,min=10"`
-	Password        string `json:"password" validate:"required,min=8,eqfield=ConfirmPassword"`
-	ConfirmPassword string `json:"confirm_password" validate:"required,min=8,eqfield=Password"`
+	Username        string `json:"username" validate:"required,min=3" binding:"required"`
+	Email           string `json:"email" validate:"required,email" binding:"required"`
+	Phone           int64  `json:"phone" validate:"required,min=10" binding:"required"`
+	Password        string `json:"password" validate:"required,min=8,eqfield=ConfirmPassword" binding:"required"`
+	ConfirmPassword string `json:"confirm_password" validate:"required,min=8,eqfield=Password" binding:"required"`
 }
 
 type CreateAccountResponse struct {
@@ -29,8 +29,8 @@ type CreateAccountResponse struct {
 }
 
 type UserLoginRequest struct {
-	LoginInput string `json:"login_input" validate:"required"` // user can login using email, phone or using username
-	Password   string `json:"password" validate:"required,min=8"`
+	LoginInput string `json:"login_input" validate:"required" binding:"required"` // user can login using email, phone or using username
+	Password   string `json:"password" validate:"required,min=8" binding:"required"`
 }
 
 type UserLoginResponse struct {

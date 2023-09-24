@@ -7,7 +7,7 @@ import (
 
 func TestCreateProductRequest(t *testing.T) {
 	s := CreateProductRequest{
-		CategoryID:  "jdksfjl",
+		CategoryID:  "650d84646bd31094bb99bd51",
 		Name:        "product",
 		Description: "description",
 		Price:       1,

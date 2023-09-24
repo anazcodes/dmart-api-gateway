@@ -12,12 +12,16 @@ func RegisterRoutes(r *gin.Engine, inventorySvcPort string, authSvc *authsvc.Ser
 		Client: InitServiceClient(inventorySvcPort),
 	}
 
-	router := r.Group("")
-	router.Use(auth.AuthRequired)
-	router.POST("/create-category", svc.CreateCategory)
-	router.POST("/read-categories", svc.ReadCategories)
-	router.POST("/add-product", svc.AddProduct)
+	router := r
+
+	router.GET("/read-categories", svc.ReadCategories)
 	router.GET("/read-products", svc.ReadProducts)
+
+	admin := r.Group("/admin")
+
+	admin.Use(auth.AdminAuth)
+	admin.POST("/create-category", svc.CreateCategory)
+	admin.POST("/add-product", svc.AddProduct)
 
 }
 

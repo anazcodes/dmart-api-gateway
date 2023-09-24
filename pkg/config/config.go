@@ -1,7 +1,7 @@
 package config
 
 import (
-	util "github.com/anazibinurasheed/d-api-gateway/internal/util"
+	util "github.com/anazibinurasheed/dmart-api-gateway/pkg/util"
 	"github.com/spf13/viper"
 )
 
@@ -13,7 +13,7 @@ type config struct {
 }
 
 func LoadConfig() (cfg config, err error) {
-	viper.AddConfigPath("./internal/config/envs")
+	viper.AddConfigPath("./pkg/config/envs")
 	viper.SetConfigName("dev")
 	viper.SetConfigType("env")
 	viper.AutomaticEnv()
