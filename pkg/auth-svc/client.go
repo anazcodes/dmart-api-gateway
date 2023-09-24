@@ -1,10 +1,10 @@
-package client
+package authsvc
 
 import (
 	"log"
 
-	"github.com/anazibinurasheed/d-api-gateway/internal/auth-svc/pb"
-	util "github.com/anazibinurasheed/d-api-gateway/internal/utils"
+	"github.com/anazibinurasheed/dmart-api-gateway/pkg/auth-svc/pb"
+	util "github.com/anazibinurasheed/dmart-api-gateway/pkg/util"
 	"google.golang.org/grpc"
 )
 

@@ -1,0 +1,91 @@
+syntax= "proto3";
+
+package inventorysvc;
+
+
+option go_package = "./pkg/inventorysvc/pb";
+
+
+service InventoryService {
+    rpc CreateCategory(CreateCategoryRequest) returns (CreateCategoryResponse){}
+    rpc ReadCategories(Request) returns (ReadCategoriesResponse){}
+    rpc DeleteCategory (DeleteCategoryRequest) returns (DeleteCategoryResponse){}
+    rpc AddProduct (AddProductRequest) returns (AddProductResponse){}
+    rpc ReadProducts (Request)returns (ReadProductsResponse){}
+}
+
+message Request{
+    int64 page = 5;
+    int64 count = 6;
+
+}
+
+message CreateCategoryRequest {
+    string name = 1;
+}
+
+message CreateCategoryResponse {
+    int64 status =1;
+    string msg =2;
+    string error =3;
+}
+
+message Category{
+    string ID =1;
+    string name =2;
+} 
+
+message ReadCategoriesResponse{
+    int64 status =1;
+    string msg =2;
+    string error= 3;
+    repeated Category categories=4;
+    
+}
+
+message DeleteCategoryRequest {
+    string categoryID = 1;
+}
+
+
+message DeleteCategoryResponse {
+    int64 status = 1;
+    string msg = 2;
+    string error = 3;
+}
+
+
+message AddProductRequest{         
+    string categoryID =1; 
+    string name  =2;
+    string	description =3;
+    repeated string Image =4;     
+    int64 price = 5;
+    bool isBlocked =6;
+}
+
+message AddProductResponse {
+    int64 status = 1;
+    string msg = 2;
+    string error = 3;
+}
+
+
+message Product{         
+    string id =1;
+    string  categoryID =2; 
+    string name  =3;
+    string brand  =5;
+    string	description =6;
+    repeated string image =7;     
+    int64 price = 8;
+    bool isBlocked =9;
+}
+
+
+message ReadProductsResponse{
+    int64 status = 1;
+    string msg = 2;
+    string error = 3;
+    repeated Product products=4;  
+}

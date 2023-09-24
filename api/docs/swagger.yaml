@@ -1,0 +1,453 @@
+definitions:
+  payload.AdminLoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  payload.CreateAccountRequest:
+    properties:
+      confirm_password:
+        minLength: 8
+        type: string
+      email:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      phone:
+        minimum: 10
+        type: integer
+      username:
+        minLength: 3
+        type: string
+    required:
+    - confirm_password
+    - email
+    - password
+    - phone
+    - username
+    type: object
+  payload.CreateCategoryRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  payload.CreateProductRequest:
+    properties:
+      category_id:
+        type: string
+      description:
+        minLength: 10
+        type: string
+      name:
+        minLength: 3
+        type: string
+      price:
+        type: integer
+    required:
+    - category_id
+    - description
+    - name
+    - price
+    type: object
+  payload.UserLoginRequest:
+    properties:
+      login_input:
+        description: user can login using email, phone or using username
+        type: string
+      password:
+        minLength: 8
+        type: string
+    required:
+    - login_input
+    - password
+    type: object
+  pb.AddProductResponse:
+    properties:
+      error:
+        type: string
+      msg:
+        type: string
+      status:
+        type: integer
+    type: object
+  pb.AdminLoginResponse:
+    properties:
+      error:
+        type: string
+      msg:
+        type: string
+      status:
+        type: integer
+      token:
+        type: string
+    type: object
+  pb.Category:
+    properties:
+      ID:
+        type: string
+      name:
+        type: string
+    type: object
+  pb.CreateAccountResponse:
+    properties:
+      error:
+        type: string
+      msg:
+        type: string
+      status:
+        type: integer
+    type: object
+  pb.Product:
+    properties:
+      brand:
+        type: string
+      categoryID:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      image:
+        items:
+          type: string
+        type: array
+      isBlocked:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: integer
+    type: object
+  pb.ReadCategoriesResponse:
+    properties:
+      categories:
+        items:
+          $ref: '#/definitions/pb.Category'
+        type: array
+      error:
+        type: string
+      msg:
+        type: string
+      status:
+        type: integer
+    type: object
+  pb.ReadProductsResponse:
+    properties:
+      error:
+        type: string
+      msg:
+        type: string
+      products:
+        items:
+          $ref: '#/definitions/pb.Product'
+        type: array
+      status:
+        type: integer
+    type: object
+  pb.UserLoginResponse:
+    properties:
+      error:
+        type: string
+      msg:
+        type: string
+      status:
+        type: integer
+      token:
+        type: string
+    type: object
+  util.response:
+    properties:
+      data: {}
+      err: {}
+      msg:
+        type: string
+      status:
+        type: integer
+    type: object
+host: localhost:58080
+info:
+  contact:
+    email: anazibinurasheed@gmail.com
+    name: Anaz Ibinu Rasheed
+    url: https://www.linkedin.com/in/anaz-ibinu-rasheed-a2b461253/
+  description: Monolith to microservices
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Device Mart Microservice
+  version: "1.0"
+paths:
+  /admin/add-product:
+    post:
+      consumes:
+      - application/json
+      description: Admin can add product
+      parameters:
+      - description: Product object
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/payload.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pb.AddProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.response'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/util.response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/util.response'
+      security:
+      - ApiKeyAuth: []
+      summary: Add product
+      tags:
+      - inventory-admin
+  /admin/create-category:
+    post:
+      consumes:
+      - application/json
+      description: Admin can create category
+      parameters:
+      - description: Category object
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/payload.CreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pb.AddProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.response'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/util.response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/util.response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create category
+      tags:
+      - inventory-admin
+  /auth/create-account:
+    post:
+      consumes:
+      - application/json
+      description: User can create an account using this endpoint
+      parameters:
+      - description: login credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/payload.CreateAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/pb.CreateAccountResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.response'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/util.response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/util.response'
+      summary: Create account
+      tags:
+      - auth
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: User can login using this endpoint
+      parameters:
+      - description: login credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/payload.UserLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pb.UserLoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.response'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/util.response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/util.response'
+      summary: User login
+      tags:
+      - auth
+  /auth/login/admin:
+    post:
+      consumes:
+      - application/json
+      description: Admin can login using this endpoint
+      parameters:
+      - description: login credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/payload.AdminLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pb.AdminLoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/util.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/util.response'
+      summary: Admin login
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      description: Logout endpoint
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/util.response'
+      summary: Logout
+      tags:
+      - auth
+  /read-categories:
+    get:
+      description: User can view all available categories
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: count
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pb.ReadCategoriesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.response'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/util.response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/util.response'
+      summary: View all categories
+      tags:
+      - inventory
+  /read-products:
+    get:
+      description: User can view all available products
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: count
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pb.ReadProductsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/util.response'
+        "417":
+          description: Expectation Failed
+          schema:
+            $ref: '#/definitions/util.response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/util.response'
+      summary: View all products
+      tags:
+      - inventory
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

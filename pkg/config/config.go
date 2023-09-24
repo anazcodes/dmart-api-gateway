@@ -1,7 +1,7 @@
-package configs
+package config
 
 import (
-	util "github.com/anazibinurasheed/d-api-gateway/internal/utils"
+	util "github.com/anazibinurasheed/dmart-api-gateway/pkg/util"
 	"github.com/spf13/viper"
 )
 
@@ -12,8 +12,8 @@ type config struct {
 	CartSvcPort      string `mapstructure:"CART_SVC_PORT"`
 }
 
-func LoadConfigs() (cfg config, err error) {
-	viper.AddConfigPath("./internal/config/envs")
+func LoadConfig() (cfg config, err error) {
+	viper.AddConfigPath("./pkg/config/envs")
 	viper.SetConfigName("dev")
 	viper.SetConfigType("env")
 	viper.AutomaticEnv()
