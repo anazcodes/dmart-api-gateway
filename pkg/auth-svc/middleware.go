@@ -2,7 +2,6 @@ package authsvc
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -34,8 +33,6 @@ func (a *AuthMiddleware) UserAuth(c *gin.Context) {
 func (a *AuthMiddleware) authRequired(c *gin.Context, role string) {
 	authorization := c.Request.Header.Get("authorization")
 	if authorization == "" {
-		fmt.Println("1")
-
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"StatusCode": 401,
 			"msg":        "Unauthorized User",
@@ -46,7 +43,6 @@ func (a *AuthMiddleware) authRequired(c *gin.Context, role string) {
 
 	token := strings.Split(authorization, "Bearer")
 	if len(token) < 2 {
-
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"StatusCode": 401,
 			"msg":        "Unauthorized User",
@@ -62,14 +58,12 @@ func (a *AuthMiddleware) authRequired(c *gin.Context, role string) {
 			Token: token[1],
 			Role:  role,
 		})
-
 	if util.HasError(err) {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
 	if resp.Status != http.StatusOK {
-
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"StatusCode": 401,
 			"data":       resp,
